@@ -1,6 +1,8 @@
 import {React,Component} from 'react'
 import axios from 'axios'
-import Carditem from './Carditem';
+import {Table,Button,Card} from 'reactstrap';
+import Updateemployee from './Updateemployee';
+import {Link} from 'react-router-dom'
 
 class Employee extends Component{
   
@@ -8,8 +10,10 @@ class Employee extends Component{
     super(props);
 
     this.state={
-      dataS:[]
+      dataS:[],
+      render:false
     }
+    this.togglerender=this.togglerender.bind(this)
 
   }
   componentDidMount(){
@@ -23,19 +27,48 @@ class Employee extends Component{
     })
   }
 
-  render(){
-    const show=this.state.dataS.map((emp)=>{
-      return(
-        // <div key={emp.id} className="col-12 col-md-5 m-1">
-        //   <Carditem emp={emp}/>
-        // </div>
-        <Carditem emp={emp}/>
-      );
+  togglerender(event){
+    event.preventDefault()
+  }
 
+  render(){
+    const tablebody=this.state.dataS.map((emp)=>{
+      return(
+        //key is needed when we want to render more than one time of any component
+        <tr key={emp.id}>
+          <td>{emp.id}</td>
+          <td>{emp.name}</td>
+          <td>{emp.gender}</td>
+          <td>{emp.salary}</td>
+          <td>{emp.team}</td>
+          <td>{emp.address}</td>
+          <td>
+            {/* passing parameters with url */}
+            <Link to={`/update/${ emp.id }`}>Edit/</Link>
+            <Link to={`/delete/${ emp.id }`}>Delete</Link>
+          </td>
+        </tr>
+      )
     });
     return(
       <div>
-        {show}
+        <Table>
+          <thead>
+            <tr>
+              <th>Employee id</th>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Salary</th>
+              <th>Team</th>
+              <th>Address</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tablebody}
+          </tbody>
+        </Table>
+        <Button><Link to="/add">Add employee</Link></Button>
       </div>
     )
   }
